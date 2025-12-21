@@ -3,38 +3,46 @@
 namespace App\Livewire\Todo;
 
 use App\Models\TodoItem;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 
 class Show extends Component
 {
     protected $listeners = ['saved']; // Event called saved ($this->emit('saved'))
+    use AuthorizesRequests;
 
     public function render()
     {
         //$list = TodoItem::all()->sortByDesc('created_at'); // get tasks from bbdd, orderby
         // Filter
-        $list = TodoItem::where('user_id', auth()->id())
-            ->orderByDesc('created_at')
-            ->get();
+        if (auth()->user()->isAdmin()) {
+            $todos = TodoItem::orderByDesc('created_at')->get();
+        } else {
+
+            $todos = TodoItem::where('user_id', auth()->id())
+                ->orderByDesc('created_at')
+                ->get();
+        }
             
-        return view('livewire.todo.show', [ 'list' => $list ]); // to the blade view as $list
+        return view('livewire.todo.show', compact('todos')); // to the blade view
     }
 
     // METHODS
 
-    public function markAsDone(TodoItem $item) 
+    public function toggleDone(TodoItem $todo)
     {
-        $item->done = true;
-        $item->save();
+        $this->authorize('update', $todo);
+
+        $todo->update([
+            'done' => ! $todo->done
+        ]);
     }
 
-    public function markAsToDo(TodoItem $item)
+    public function delete(TodoItem $todo)
     {
-        $item->done = false;
-        $item->save();
+        $this->authorize('delete', $todo);
+
+        $todo->delete();
     }
-    public function deleteItem(TodoItem $item) 
-    {
-        $item->delete();
-    }
+
 }

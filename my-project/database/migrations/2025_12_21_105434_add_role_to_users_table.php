@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('todo_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId()->constrained('user_id')->delete('cascade');
-            $table->string('description');
-            $table->boolean('done')->default(false);
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            //
+            $table->string('role')->default('user');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('todo_items');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

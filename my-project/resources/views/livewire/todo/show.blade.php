@@ -4,28 +4,51 @@
         <thead>
             <tr>
                 <th class="px-4 py-2">Item</th>
+                <th class="px-4 py-2">Assigned to</th>
                 <th class="px-4 py-2">Status</th>
                 <th class="px-4 py-2">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($list as $item)
-                <tr @if($loop->even)class="bg-grey"@endif>
-                    <td class="border px-4 py-2">{{ $item->description  }}</td>
-                    <td class="border px-4 py-2">@if($item->done)Done @else To Do @endif</td>
+            @foreach ($todos as $todo)
+                <tr @if($loop->even)class="bg-gray-100"@endif>
+                    <td class="border px-4 py-2">{{ $todo->description  }}</td>
+                    <td class="border px-4 py-2">{{ ($todo->user)->name ?? 'Sin asignar' }}</td>
+                    <td
+                        @class([
+                            'border px-4 py-2 text-center bg-yellow-400 rounded font-semibold ',
+                            'bg-green-500 text-white' => $todo->done,
+                            'bg-yellow-300 text-gray-800' => !$todo->done,
+                        ])
+                    >
+                        {{ $todo->done ? 'Done' : 'To Do' }}
+                    </td>
+                    
                     <td class="border px-4 py-2">
-                        @if($item->done)
-                            <button wire:click="markAsToDo({{  $item->id  }})" class="bg-red-100 text-red-600 px-6 rounded-full">
-                                Mark as "To Do"
-                            </button>
-                        @else
-                            <button wire:click="markAsDone({{  $item->id }})" class="bg-gray-800 text-white px-6 rounded-full">
-                                Mark as "Done"
-                            </button>
-                        @endif
-                        <button wire:click="deleteItem({{ $item->id }})"class="bg-red-100 text-red-600 px-6 rounded-full">
-                            Delete Permanently
-                        </button>
+                        
+                            @can('update', $todo)
+                                <button
+                                    wire:click="toggleDone({{ $todo->id }})"
+                                    @class([
+                                        'px-3 py-1 text-white bg-blue-500 rounded',
+                                    
+                                        
+                                    ])
+                                >
+                                    {{ $todo->done ? 'Undone' : 'Done' }}
+                                </button>
+                            @endcan
+                        
+                            @can('delete', $todo)
+                                <button
+                                    wire:click="delete({{ $todo->id }})"
+                                    class="px-3 py-1 bg-red-600 text-white rounded"
+                                >
+                                    Delete
+                                </button>
+                            @endcan
+                        
+                        
                     </td>
                 </tr>
             @endforeach

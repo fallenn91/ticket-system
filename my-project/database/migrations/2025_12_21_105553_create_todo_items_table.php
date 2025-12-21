@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('todo_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId()->constrained('user_id')->delete('cascade');
-            $table->string('description');
+            $table->string('title');
+            $table->foreignId('user_id')->constrained()->delete('cascade');
+            $table->string('description')->nullable();
             $table->boolean('done')->default(false);
             $table->timestamps();
         });

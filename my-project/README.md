@@ -30,3 +30,8 @@ php artisan migrate
 docker-compose exec app php artisan make:model TodoItem
 docker-compose exec app php artisan make:migration create-todo-items-table
 
+## USERS TESTS
+
+role: Admin, Email: admin@admin.com, Password: password
+role: User, Email: user@user.com, Password: password
+

@@ -1,13 +1,17 @@
-<x-form-section submit="createItem">
+<x-form-section submit="create">
     <x-slot name="title">
         {{ __('Create New To-Do Item') }}
     </x-slot>
-
+    
     <x-slot name="description">
         {{ __('Create a new item in your to-do list.') }}
     </x-slot>
-
+    
+    
     <x-slot name="form">
+        @can('create', App\Models\TodoItem::class)
+            
+        
         <div class="col-span-6 sm:col-span-4">
             <x-input-label for="description" value="{{ __('Item Description') }}" />
 
@@ -18,9 +22,16 @@
                 wire:model.defer="description"
                 autocomplete="description"
             />
-
+            <select wire:model="user_id" class="mt-1 block w-full">
+                <option value = "">-- Assign User --</option>
+                @foreach ($users as $user )
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
+            </select>
+            
             <x-input-error :messages="$errors->get('description')" class="mt-2" />
         </div>
+        @endcan
     </x-slot>
 
     <x-slot name="actions">
@@ -28,8 +39,12 @@
             {{ __('Saved.') }}
         </x-action-message>
 
-        <x-primary-button>
-            {{ __('Save') }}
-        </x-primary-button>
+        @can('create', App\Models\TodoItem::class)
+            <button wire:click="create"
+            class="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+            Create
+            </button>
+        @endcan
     </x-slot>
 </x-form-section>
