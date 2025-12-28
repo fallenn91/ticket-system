@@ -2,18 +2,21 @@
 
 namespace App\Livewire\Todo;
 
+use App\Models\itemCategory;
 use App\Models\TodoItem;
 use App\Models\User;
-use Livewire\Component;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\Component;
 
 
 
 class Form extends Component
 {
     use AuthorizesRequests;
+    public $category_id;
     public $users;
     public $user_id;
+    public $item_categories;
     public $description; // Connected to the form (wire:model.defer="description")
 
     protected $rules = [
@@ -22,6 +25,7 @@ class Form extends Component
     ];
     public function mount()
     {
+        $this->item_categories = itemCategory::all();
         $this->users = User::where('role', 'user')->get();
     }
 
@@ -42,11 +46,13 @@ class Form extends Component
         $this->validate([
             'description' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
+            'category_id' => 'required|exists:item_categories,id',
         ]);
 
         TodoItem::create([
             'description' => $this->description,
             'user_id' => $this->user_id,
+            'category_id' => $this->category_id,
             'done' => false,
         ]);
 
@@ -54,6 +60,7 @@ class Form extends Component
 
         $this->description=''; // Input clear
         $this->user_id = null;
+        $this->category_id = null;
     }
     
 }

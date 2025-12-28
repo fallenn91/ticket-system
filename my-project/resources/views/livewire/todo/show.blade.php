@@ -1,9 +1,11 @@
 <div>
     {{-- Success is as dangerous as failure. --}}
+    
     <table class="table-auto w-full">
         <thead>
             <tr>
                 <th class="px-4 py-2">Item</th>
+                <th class="px-4 py-2">Category</th>
                 <th class="px-4 py-2">Assigned to</th>
                 <th class="px-4 py-2">Status</th>
                 <th class="px-4 py-2">Actions</th>
@@ -13,6 +15,7 @@
             @foreach ($todos as $todo)
                 <tr @if($loop->even)class="bg-gray-100"@endif>
                     <td class="border px-4 py-2">{{ $todo->description  }}</td>
+                    <td class="border px-4 py-2">{{ $todo->category  }}</td>
                     <td class="border px-4 py-2">{{ ($todo->user)->name ?? 'Sin asignar' }}</td>
                     <td
                         @class([

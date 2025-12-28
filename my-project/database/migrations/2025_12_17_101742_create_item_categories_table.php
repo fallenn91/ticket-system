@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('todo_items', function (Blueprint $table) {
-            //
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->after('id');
+        Schema::create('item_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
         });
     }
 
@@ -22,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('todo_items', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('item_categories');
     }
 };

@@ -13,6 +13,13 @@
             
         
         <div class="col-span-6 sm:col-span-4">
+            <x-input-label for="category" value="{{ __('Item Category') }}" />
+                <select wire:model = "category_id" class="mt-1 block w-full">
+                    <option value="">-- Select --</option>
+                    @foreach ($item_categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
             <x-input-label for="description" value="{{ __('Item Description') }}" />
 
             <x-text-input
